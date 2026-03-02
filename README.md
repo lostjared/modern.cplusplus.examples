@@ -26,7 +26,7 @@ Modern C++ evolves significantly across standards. A lot of feature discussions 
 ## Repository layout
 
 ```text
-Jareds.Modern.CPP.Examples/
+modern.cplusplus.examples/
 ├── index.html         # Main landing page ("Jared's Modern C++ Examples")
 ├── README.md          # This file
 ├── 11/                # Generated docs for cplusplus11.Examples
@@ -133,6 +133,18 @@ Each docs site in `11/`, `17/`, and `2x/` uses the same generated UI and capabil
 - Local syntax highlighting assets (offline support)
 
 This consistency makes it easier to compare coding style and feature usage across standards.
+
+---
+
+## Deployment (upload-ready)
+
+This folder is self-contained and can be uploaded directly:
+
+- Upload `modern.cplusplus.examples/` as-is
+- Keep `index.html` at the folder root
+- Keep subfolders `11/`, `17/`, and `2x/` alongside it
+
+No build step or external CDN is required for browsing.
 
 ---
 
