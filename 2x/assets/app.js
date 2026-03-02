@@ -131,7 +131,181 @@ function renderCodeWithLineNumbers(source, file) {
   return `<div class="code-wrap"><table class="code-table"><tbody>${rows}</tbody></table></div>`;
 }
 
+function scrollToTop() {
+  if (content && typeof content.scrollTo === 'function') {
+    content.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }
+  if (typeof window.scrollTo === 'function') {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }
+}
+
+function isReadmeFile(file) {
+  return String(file.name || '').toLowerCase() === 'readme.md';
+}
+
+function renderInlineMarkdown(text) {
+  const codeChunks = [];
+  let html = esc(String(text || ''));
+
+  html = html.replace(/`([^`]+)`/g, (_, code) => {
+    codeChunks.push(code);
+    return `@@CODE${codeChunks.length - 1}@@`;
+  });
+
+  html = html.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a class="ext-link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+  html = html.replace(/@@CODE(\d+)@@/g, (_, index) => `<code>${codeChunks[Number(index)]}</code>`);
+  return html;
+}
+
+function renderMarkdownDocument(source) {
+  const lines = String(source || '').replace(/\r/g, '').split('\n');
+  const out = [];
+  let paragraph = [];
+  let inUl = false;
+  let inOl = false;
+  let inCode = false;
+  let codeLang = '';
+  let codeLines = [];
+
+  function closeLists() {
+    if (inUl) {
+      out.push('</ul>');
+      inUl = false;
+    }
+    if (inOl) {
+      out.push('</ol>');
+      inOl = false;
+    }
+  }
+
+  function flushParagraph() {
+    if (!paragraph.length) return;
+    out.push(`<p>${renderInlineMarkdown(paragraph.join(' '))}</p>`);
+    paragraph = [];
+  }
+
+  for (const rawLine of lines) {
+    const line = String(rawLine);
+
+    if (inCode) {
+      if (/^\s*```/.test(line)) {
+        const codeText = esc(codeLines.join('\n'));
+        const langClass = codeLang ? ` class="language-${esc(codeLang)}"` : '';
+        out.push(`<pre><code${langClass}>${codeText}</code></pre>`);
+        inCode = false;
+        codeLang = '';
+        codeLines = [];
+      } else {
+        codeLines.push(line);
+      }
+      continue;
+    }
+
+    const fenceMatch = line.match(/^\s*```\s*([A-Za-z0-9_+.-]+)?\s*$/);
+    if (fenceMatch) {
+      flushParagraph();
+      closeLists();
+      inCode = true;
+      codeLang = fenceMatch[1] || '';
+      codeLines = [];
+      continue;
+    }
+
+    if (!line.trim()) {
+      flushParagraph();
+      closeLists();
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      closeLists();
+      const level = heading[1].length;
+      out.push(`<h${level}>${renderInlineMarkdown(heading[2])}</h${level}>`);
+      continue;
+    }
+
+    if (/^(?:\*\s*\*\s*\*|-{3,}|_{3,})\s*$/.test(line.trim())) {
+      flushParagraph();
+      closeLists();
+      out.push('<hr/>');
+      continue;
+    }
+
+    const ulItem = line.match(/^\s*[-*+]\s+(.+)$/);
+    if (ulItem) {
+      flushParagraph();
+      if (inOl) {
+        out.push('</ol>');
+        inOl = false;
+      }
+      if (!inUl) {
+        out.push('<ul>');
+        inUl = true;
+      }
+      out.push(`<li>${renderInlineMarkdown(ulItem[1])}</li>`);
+      continue;
+    }
+
+    const olItem = line.match(/^\s*\d+\.\s+(.+)$/);
+    if (olItem) {
+      flushParagraph();
+      if (inUl) {
+        out.push('</ul>');
+        inUl = false;
+      }
+      if (!inOl) {
+        out.push('<ol>');
+        inOl = true;
+      }
+      out.push(`<li>${renderInlineMarkdown(olItem[1])}</li>`);
+      continue;
+    }
+
+    const quote = line.match(/^>\s?(.*)$/);
+    if (quote) {
+      flushParagraph();
+      closeLists();
+      out.push(`<blockquote><p>${renderInlineMarkdown(quote[1])}</p></blockquote>`);
+      continue;
+    }
+
+    closeLists();
+    paragraph.push(line.trim());
+  }
+
+  flushParagraph();
+  closeLists();
+
+  if (inCode) {
+    const codeText = esc(codeLines.join('\n'));
+    const langClass = codeLang ? ` class="language-${esc(codeLang)}"` : '';
+    out.push(`<pre><code${langClass}>${codeText}</code></pre>`);
+  }
+
+  return out.join('\n');
+}
+
 function renderFile(file) {
+  if (isReadmeFile(file)) {
+    content.innerHTML = `
+      <article class="panel markdown-body">
+        ${renderMarkdownDocument(file.code)}
+      </article>
+    `;
+
+    document.querySelectorAll('.file').forEach(el => el.classList.remove('active'));
+    const active = document.querySelector(`.file[data-path="${CSS.escape(file.path)}"]`);
+    if (active) active.classList.add('active');
+    scrollToTop();
+    return;
+  }
+
   const features = file.features.length
     ? file.features.map(f => `<span class="badge">${esc(f)}</span>`).join('')
     : '<span class="empty">No specific C++20/C++23 pattern heuristics detected.</span>';
@@ -205,6 +379,7 @@ function renderFile(file) {
   document.querySelectorAll('.file').forEach(el => el.classList.remove('active'));
   const active = document.querySelector(`.file[data-path="${CSS.escape(file.path)}"]`);
   if (active) active.classList.add('active');
+  scrollToTop();
 }
 
 function openFromHash() {
