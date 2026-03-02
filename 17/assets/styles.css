@@ -50,7 +50,7 @@ body {
 .layout {
   display: grid;
   grid-template-columns: 340px 1fr;
-  min-height: calc(100vh - 74px);
+  height: calc(100vh - 74px);
 }
 
 .sidebar {

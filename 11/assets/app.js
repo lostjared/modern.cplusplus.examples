@@ -1,3 +1,4 @@
+/* build:20260302115048 */
 const data = window.EXAMPLES_DATA;
 const treeRoot = document.getElementById('tree');
 const content = document.getElementById('content');
@@ -129,15 +130,6 @@ function renderCodeWithLineNumbers(source, file) {
     .join('');
 
   return `<div class="code-wrap"><table class="code-table"><tbody>${rows}</tbody></table></div>`;
-}
-
-function scrollToTop() {
-  if (content && typeof content.scrollTo === 'function') {
-    content.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }
-  if (typeof window.scrollTo === 'function') {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }
 }
 
 function isReadmeFile(file) {
@@ -298,11 +290,12 @@ function renderFile(file) {
         ${renderMarkdownDocument(file.code)}
       </article>
     `;
+    content.scrollTop = 0;
+    window.scrollTo(0, 0);
 
     document.querySelectorAll('.file').forEach(el => el.classList.remove('active'));
     const active = document.querySelector(`.file[data-path="${CSS.escape(file.path)}"]`);
     if (active) active.classList.add('active');
-    scrollToTop();
     return;
   }
 
@@ -376,10 +369,11 @@ function renderFile(file) {
     </section>
   `;
 
+  content.scrollTop = 0;
+  window.scrollTo(0, 0);
   document.querySelectorAll('.file').forEach(el => el.classList.remove('active'));
   const active = document.querySelector(`.file[data-path="${CSS.escape(file.path)}"]`);
   if (active) active.classList.add('active');
-  scrollToTop();
 }
 
 function openFromHash() {
