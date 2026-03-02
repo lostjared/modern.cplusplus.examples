@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jared's Modern C++ Examples</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111b2e;
+      --panel-2: #15233b;
+      --text: #e6edf7;
+      --muted: #9fb1cf;
+      --accent: #6ea8fe;
+      --accent-2: #8ef0cc;
+      --border: #274063;
+      --link: #9bc1ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1220 0%, #0f1829 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.4rem;
+    }
+
+    header {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(160deg, #111b2e 0%, #15233b 100%);
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin-top: 0.55rem;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 75ch;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 1rem;
+    }
+
+    .card h2 {
+      margin: 0 0 0.45rem;
+      font-size: 1.15rem;
+    }
+
+    .card p {
+      margin: 0 0 0.8rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .card a {
+      text-decoration: none;
+      color: var(--text);
+      display: inline-block;
+      background: linear-gradient(180deg, #233a60 0%, #1a2f50 100%);
+      border: 1px solid #335482;
+      border-radius: 9px;
+      padding: 0.48rem 0.7rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .card a:hover { border-color: var(--accent); }
+
+    section {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    p { margin: 0.45rem 0; }
+
+    ul { margin: 0.45rem 0 0.45rem 1.1rem; }
+
+    li { margin: 0.35rem 0; }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .accent {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    a.inline {
+      color: var(--link);
+      text-underline-offset: 2px;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 0.2rem 0 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Jared's Modern C++ Examples</h1>
+      <p class="subtitle">
+        A single entry point for Jared Bruni's C++ learning repositories, covering the transition from C++11 through C++17 and into C++20/C++23. Each section links to a full offline documentation site with searchable tree navigation, feature summaries, and syntax-highlighted source.
+      </p>
+    </header>
+
+    <div class="grid">
+      <article class="card">
+        <h2>C++11 Documentation</h2>
+        <p>Core modern C++ foundations: move semantics, lambdas, auto, smart pointers, and the standard threading model.</p>
+        <a href="11/index.html">Open C++11 Docs</a>
+      </article>
+
+      <article class="card">
+        <h2>C++17 Documentation</h2>
+        <p>Practical language refinements: structured bindings, if constexpr, std::optional/std::variant, and filesystem utilities.</p>
+        <a href="17/index.html">Open C++17 Docs</a>
+      </article>
+
+      <article class="card">
+        <h2>C++20 / C++23 Documentation</h2>
+        <p>Latest-generation features: ranges, concepts, coroutines, format/span, and newer standard library evolution.</p>
+        <a href="2x/index.html">Open C++20/C++23 Docs</a>
+      </article>
+    </div>
+
+    <section>
+      <h3>What these repositories represent</h3>
+      <p>
+        These projects are hands-on example collections rather than formal textbook chapters. They show how language features are used in real code, with a mix of focused experiments and larger sample programs. The documentation pages in each subfolder are generated from source, so you can browse by directory and inspect code with line numbers and feature metadata.
+      </p>
+      <p>
+        The three tracks are organized chronologically to make the language progression clearer: <span class="accent">C++11</span> for the foundational modernization wave, <span class="accent">C++17</span> for maturity and ergonomics, and <span class="accent">C++20/C++23</span> for major expressiveness and library expansion.
+      </p>
+    </section>
+
+    <section>
+      <h3>Background: C++ and Modern C++</h3>
+      <p>
+        C++ began as "C with Classes" and evolved into a systems language focused on performance, control, and portability. It became widely used for graphics engines, operating-system components, embedded systems, scientific computing, finance, networking, and toolchains where predictable performance and explicit resource management are critical.
+      </p>
+      <p>
+        The term <strong>Modern C++</strong> usually refers to the standards era starting with C++11, when the language and standard library received substantial upgrades aimed at safer abstractions and clearer code without sacrificing speed. Instead of relying mostly on macros and manual ownership patterns, developers gained language-level tools for expressing intent directly.
+      </p>
+      <ul>
+        <li><strong>C++11</strong> introduced core building blocks like move semantics, smart pointers, lambdas, `auto`, range-based loops, and concurrency primitives.</li>
+        <li><strong>C++14/C++17</strong> refined those ideas with better compile-time logic, stronger type utilities, structured bindings, and utility types like `optional` and `variant`.</li>
+        <li><strong>C++20/C++23</strong> expanded the model with concepts, ranges, coroutines, and richer libraries to write expressive, generic code with clearer constraints.</li>
+      </ul>
+      <p>
+        In practice, modern C++ is less about "new syntax" and more about writing robust code with explicit ownership, composable abstractions, and strong compile-time guarantees.
+      </p>
+    </section>
+
+    <section>
+      <h3>How to use this index</h3>
+      <ul>
+        <li>Use the cards at the top to jump into the C++11, C++17, or C++20/C++23 documentation trees.</li>
+        <li>Within each docs site, use the left-side directory browser and search box to find topics quickly.</li>
+        <li>Open any file to view generated summaries, detected language features, and full highlighted source.</li>
+      </ul>
+      <p class="small">
+        This bundle is fully local/offline: highlight assets and data files are included under each subfolder.
+      </p>
+    </section>
+
+    <footer>
+      Maintained as a local documentation hub for Jared Bruni's C++ example repositories.
+    </footer>
+  </div>
+</body>
+</html>
