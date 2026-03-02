@@ -14,7 +14,7 @@ This project is designed as a **single landing experience** with an in-depth ind
 
 Modern C++ evolves significantly across standards. A lot of feature discussions online are fragmented by version, and examples are often hard to compare side-by-side.
 
-`Jareds.Modern.CPP.Examples` solves that by:
+`modern.cplusplus.examples` solves that by:
 
 1. Organizing examples by language era
 2. Preserving the same docs interface across all standards
